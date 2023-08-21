@@ -114,6 +114,9 @@ add_library(zip
   zip_utf-8.c
   ${CMAKE_CURRENT_BINARY_DIR}/zip_err_str.c
   )
+
+set_property(SOURCE zip_err_str.c PROPERTY SKIP_AUTOGEN ON)
+
 add_library(libzip::zip ALIAS zip)
 
 if(WIN32)
@@ -175,7 +178,7 @@ if(SHARED_LIB_VERSIONNING)
   set_target_properties(zip PROPERTIES VERSION 5.5 SOVERSION 5)
 endif()
 
-target_link_libraries(zip PRIVATE ZLIB::ZLIB)
+target_link_libraries(zip PRIVATE zlibstatic)
 target_include_directories(zip
   PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>

@@ -46,12 +46,18 @@ zip_fdopen(int fd_orig, int _flags, int *zep) {
     zip_source_t *src;
     struct zip_error error;
 
+    (void)fd;
+    (void)fp;
+    (void)za;
+    (void)src;
+    (void)error;
+
     if (_flags < 0 || (_flags & ~(ZIP_CHECKCONS | ZIP_RDONLY))) {
         _zip_set_open_error(zep, NULL, ZIP_ER_INVAL);
         return NULL;
     }
 
-#ifndef ENABLE_FDOPEN
+#ifndef LIBZIP_ENABLE_FDOPEN
     _zip_set_open_error(zep, NULL, ZIP_ER_OPNOTSUPP);
     return NULL;
 #else
