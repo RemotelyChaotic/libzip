@@ -39,6 +39,66 @@
 
 #include "zipint.h"
 
+// for compatibility with android
+static const char *errmsgs_s[] = {
+    "null ptr",                 /* ESNULLP */
+    "length is zero",           /* ESZEROL */
+    "length is below min",      /* ESLEMIN */
+    "length exceeds RSIZE_MAX", /* ESLEMAX */
+    "overlap undefined",        /* ESOVRLP */
+    "empty string",             /* ESEMPTY */
+    "not enough space",         /* ESNOSPC */
+    "unterminated string",      /* ESUNTERM */
+    "no difference",            /* ESNODIFF */
+    "not found",                /* ESNOTFND */
+    "wrong size",               /* ESLEWRNG */
+};
+
+static const int len_errmsgs_s[] = {
+    sizeof "null ptr",                 /* ESNULLP */
+    sizeof "length is zero",           /* ESZEROL */
+    sizeof "length is below min",      /* ESLEMIN */
+    sizeof "length exceeds RSIZE_MAX", /* ESLEMAX */
+    sizeof "overlap undefined",        /* ESOVRLP */
+    sizeof "empty string",             /* ESEMPTY */
+    sizeof "not enough space",         /* ESNOSPC */
+    sizeof "unterminated string",      /* ESUNTERM */
+    sizeof "no difference",            /* ESNODIFF */
+    sizeof "not found",                /* ESNOTFND */
+    sizeof "wrong size",               /* ESLEWRNG */
+};
+
+#ifndef ESNULLP
+#define ESNULLP         ( 400 )       /* null ptr                    */
+#endif
+
+#ifndef ESLEWRNG
+#define ESLEWRNG        ( 410 )       /* wrong size                */
+#endif
+
+#ifndef ESLAST
+#define ESLAST ESLEWRNG
+#endif
+
+size_t strerrorlen_s_zipp(int errnum)
+{
+  if (errnum >= ESNULLP && errnum <= ESLAST)
+  {
+    return len_errmsgs_s[errnum - ESNULLP] - 1;
+  }
+  else
+  {
+    const char *buf = strerror(errnum);
+    return buf ? strlen(buf) : 0;
+  }
+}
+
+void strerror_s_zipp(char *dest, size_t dmax, int errnum)
+{
+  (void)dmax;
+  strcpy(dest, errmsgs_s[errnum-ESNULLP]);
+}
+
 ZIP_EXTERN const char *
 zip_error_strerror(zip_error_t *err) {
     const char *zip_error_string, *system_error_string;
@@ -59,9 +119,9 @@ zip_error_strerror(zip_error_t *err) {
 
         switch (_zip_err_str[err->zip_err].type) {
             case ZIP_ET_SYS: {
-                size_t len = strerrorlen_s(err->sys_err) + 1;
+                size_t len = strerrorlen_s_zipp(err->sys_err) + 1;
                 system_error_buffer = malloc(len);
-                strerror_s(system_error_buffer, len, err->sys_err);
+                strerror_s_zipp(system_error_buffer, len, err->sys_err);
                 system_error_string = system_error_buffer;
                 break;
             }

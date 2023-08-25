@@ -98,7 +98,7 @@ _zip_source_window_new(zip_source_t *src, zip_uint64_t start, zip_int64_t length
     zip_stat_init(&ctx->stat);
     ctx->stat_invalid = st_invalid;
     if (attributes != NULL) {
-        (void)memcpy_s(&ctx->attributes, sizeof(ctx->attributes), attributes, sizeof(ctx->attributes));
+        (void)memcpy(&ctx->attributes, attributes, sizeof(ctx->attributes));
     }
     else {
         zip_file_attributes_init(&ctx->attributes);
@@ -306,7 +306,7 @@ window_read(zip_source_t *src, void *_ctx, void *data, zip_uint64_t len, zip_sou
             return -1;
         }
 
-        (void)memcpy_s(data, sizeof(ctx->attributes), &ctx->attributes, sizeof(ctx->attributes));
+        (void)memcpy(data, &ctx->attributes, sizeof(ctx->attributes));
         return sizeof(ctx->attributes);
 
     case ZIP_SOURCE_SUPPORTS:

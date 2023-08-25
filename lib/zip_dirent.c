@@ -242,7 +242,7 @@ _zip_dirent_clone(const zip_dirent_t *sde) {
         return NULL;
 
     if (sde)
-        (void)memcpy_s(tde, sizeof(*tde), sde, sizeof(*sde));
+        (void)memcpy(tde, sde, sizeof(*sde));
     else
         _zip_dirent_init(tde);
 
