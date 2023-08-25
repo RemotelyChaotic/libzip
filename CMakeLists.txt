@@ -56,7 +56,6 @@ if(WIN32)
   endif()
 endif()
 
-option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 option(LIBZIP_DO_INSTALL "Install libzip and the related files" OFF)
 
 option(SHARED_LIB_VERSIONNING "Add SO version in .so build" ON)
