@@ -95,8 +95,17 @@ size_t strerrorlen_s_zipp(int errnum)
 
 void strerror_s_zipp(char *dest, size_t dmax, int errnum)
 {
-  (void)dmax;
-  strcpy(dest, errmsgs_s[errnum-ESNULLP]);
+  if (errnum >= ESNULLP && errnum <= ESLAST)
+  {
+    (void)dmax;
+    strcpy(dest, errmsgs_s[errnum-ESNULLP]);
+  }
+  else
+  {
+    (void)dmax;
+    const char *buf = strerror(errnum);
+    strcpy(dest, buf);
+  }
 }
 
 ZIP_EXTERN const char *
